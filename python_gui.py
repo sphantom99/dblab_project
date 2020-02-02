@@ -606,7 +606,7 @@ class editor_submission(object):
 												self.entryfield_Pages.get(),
 												self.entryfield_Photo.get(),
 												res[0],
-												"aristeid@ceid.upatras.gr"])#tester.user])
+												tester.user])
 		a.commit()
 		if self.author_check.get() == 1 :
 			coauth = tn.Toplevel()
@@ -626,7 +626,7 @@ class editor_view(object):
 	def __init__(self, master):
 
 		self.choices = []
-		curs.callproc("showAllArticles",["aristeid@ceid.upatras.gr"])#tester.user])
+		curs.callproc("showAllArticles",[tester.user])
 		for i in curs.stored_results():
 			results = i.fetchall()
 		
@@ -1105,7 +1105,8 @@ class publisher(object):
 		options=[("Change Papers attributes",0),
 				("Set the number of issues to be printed",1),
 				("Set the editor in chief",2),
-				("Check sold copies of an issue",3)]
+				("Check sold copies of an issue",3),
+				("Hire a new Worker",4)]
 
 		for text,val in options:
 			tn.Radiobutton(master,text=text , value = val , variable = self.var1).pack()
@@ -1134,6 +1135,10 @@ class publisher(object):
 		elif self.var1.get()==3:
 			sale = tn.Toplevel()
 			salewin = chooseNpPub(sale)
+
+		elif self.var1.get()==4:
+			hire = tn.Toplevel()
+			hirewin = hiring(hire)
 			
 class Paper(object):
 	"""docstring for Paper"""
@@ -1164,7 +1169,7 @@ class chooseNpPub(object):
 	"""docstring for chooseNpPub"""
 	def __init__(self, master):
 		self.choices = []
-		curs.callproc("showAllOwnedNewspapers",["Maria Rigou"])#tester.user])
+		curs.callproc("showAllOwnedNewspapers",[tester.user])
 		for i in curs.stored_results():
 			results = i.fetchall()
 		
@@ -1328,16 +1333,71 @@ class sales(object):
 	def submit_issue(self):
 		msg.showinfo("Result",self.ansstring1.get())
 		pass
-								
+
+class hiring(object):
+	"""docstring for hiring"""
+	def __init__(self, master):
+		self.Choices = ["Simple Worker","Administrative","Journalist","Editor in chief"]
+		self.first = []
+		self.last = []
+		curs.callproc("showAllOwnedNewspapers",[tester.user])
+		for i in curs.stored_results():
+			self.first = i.fetchall()
+		
+		for x in range(len(self.first)):
+			for y in self.first[x]:
+				self.last.append(str(y).encode("utf-8"))
+
+		self.master = master
+		self.master.title("Hire")
+		self.welcomevar = tn.StringVar()
+		self.welcomevar.set("Please fill out the next fields..")
+		self.ansvar = tn.StringVar()
+		self.ansvar1 = tn.StringVar()
+		self.welcome_label = tn.Label(master,textvar=self.welcomevar)
+		self.welcome_label.grid(columnspan=2,row = 0,column = 0)
+
+		self.name_label = tn.Label(master,text = "Name :")
+		self.name_label.grid(row = 1,column = 0)
+		self.lastname_label = tn.Label(master,text = "Last Name :")
+		self.lastname_label.grid(row = 2,column = 0)
+		self.email_label = tn.Label(master,text = "Email :")
+		self.email_label.grid(row = 3,column = 0)
+		self.salary_label = tn.Label(master,text = "Salary :")
+		self.salary_label.grid(row = 4,column = 0)
+		self.newspaper_label = tn.Label(master,text = "Assigned Newspaper :")
+		self.newspaper_label.grid(row = 5,column = 0)
+		self.specialty_label = tn.Label(master,text="Hired as a :")
+		self.specialty_label.grid(row = 6,column = 0)
+		
+		self.name_entry = tn.Entry(master)
+		self.name_entry.grid(row = 1, column = 1)
+		self.lastname_entry = tn.Entry(master)
+		self.lastname_entry.grid(row = 2, column = 1)
+		self.email_entry = tn.Entry(master)
+		self.email_entry.grid(row = 3, column = 1)
+		self.salary_entry = tn.Entry(master)
+		self.salary_entry.grid(row = 4, column = 1)
+		self.newspaper_option = tn.OptionMenu(master,self.ansvar,*self.last)
+		self.newspaper_option.grid(row = 5,column = 1)
+		self.specialty_option = tn.OptionMenu(master,self.ansvar1,*self.Choices)
+		self.specialty_option.grid(row = 6,column = 1)
+		
+		self.accept = tn.Button(master,text="Accept",command = self.hire)
+		self.accept.grid(row = 7,column = 0)
+		self.quit = tn.Button(master,text="Cancel",command = self.master.destroy)
+		self.quit.grid(row = 7, column = 1)	
+	def hire(self):
+		print("Please fix the fucking stored procedure....")
+		pass					
 a = con.connect(user = "root",password="",host="localhost",database = "Project")
 curs = a.cursor()
-
+"""
 root = tn.Tk()
 tester = login(root)
 root.mainloop()
 """
 new = tn.Tk()
-test = financial_data(new)
+test = hiring(new)
 new.mainloop()	
-"""
 
