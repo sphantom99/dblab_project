@@ -1,0 +1,70 @@
+USE Project;
+
+INSERT INTO Newspaper VALUES
+('TO BHMA', 'WEEKLY', 'Maria Rigou'),
+('KATHIMERINH', 'DAILY', 'Eleni Voyatzaki'),
+('CEID Times', 'MONTHLY', 'Efstratios Gallopoulos');
+
+INSERT INTO Worker VALUES
+('Leonidas', 'Karagiannis', 'st1064036@ceid.upatras.gr', '2017-08-25', '1200.00', 'CEID Times'),
+('Aristeidis', 'Elias', 'aristeid@ceid.upatras.gr', '1998-01-01', '2500.00', 'CEID Times'),
+('Haridimos', 'Vergos', 'vergos@ceid.upatras.gr', '1985-06-10', '3000.00', 'CEID Times'),
+('Ioannis', 'Hatziligeroudis', 'ihatz@ceid.upatras.gr', '1982-05-05', '2310.00', 'CEID Times'),
+('George', 'Al Baboul','st1059631@ceid.upatras.gr','2016-05-20','1500.00','KATHIMERINH'),
+('Spyros', 'Sioutas','sioutas@ceid.upatras.gr','2005-04-13','2100.00','KATHIMERINH'),
+('George', 'Alexiou', 'alexiou@ceid.upatras.gr', '1980-01-01', '4000.00', 'KATHIMERINH'),
+('Christos', 'Christidis', 'christides@ceid.upatras.gr', '2001-10-03', '900.00', 'KATHIMERINH'),
+('Paulinho', 'Akino Elloul', 'st1059630@ceid.upatras.gr', '2017-08-22', '1200.00', 'TO BHMA'),
+('Dimitris', 'Nikolos', 'nikolosd@ceid.upatras.gr', '1985-02-25', '3000.00', 'TO BHMA'),
+('Vasileios', 'Megalooikonomou', 'vasilis@ceid.upatras.gr', '1999-08-17', '1300.00', 'TO BHMA'),
+('Emmanouil', 'Psarakis', 'psarakis@ceid.upatras.gr', '1995-04-03', '5000.00', 'TO BHMA');
+
+INSERT INTO Issue VALUES
+(1,'2019-01-01',NULL,NULL,NULL,'KATHIMERINH'),
+(1,'2019-03-15',50,10000,320,'TO BHMA'),
+(1,'2019-02-10',24,10300,1789,'CEID Times');
+
+INSERT INTO Administrative VALUES
+('Secretary','Sofokleoys',11,'Patras','st1064036@ceid.upatras.gr'),
+('Secretary','Athinon',31,'Patras','st1059631@ceid.upatras.gr'),
+('Logistics','Agiou Vasileiou',4,'Patras','st1059630@ceid.upatras.gr');
+
+INSERT INTO Journalist VALUES
+(150,'bio1','vasilis@ceid.upatras.gr'),
+(32,'bio2','vergos@ceid.upatras.gr'),
+(231,'bio3','alexiou@ceid.upatras.gr'),
+(20,'bio4','aristeid@ceid.upatras.gr'),
+(30,'bio5','christides@ceid.upatras.gr'),
+(40,'bio6','nikolosd@ceid.upatras.gr');
+
+INSERT INTO Editor_in_chief VALUES
+('CEID Times','aristeid@ceid.upatras.gr'),
+('KATHIMERINH','christides@ceid.upatras.gr'),
+('TO BHMA','nikolosd@ceid.upatras.gr');
+
+INSERT INTO Administrative_Phone VALUES
+(6986829965,'st1064036@ceid.upatras.gr'),
+(6987489294,'st1059630@ceid.upatras.gr'),
+(1234567890,'st1059631@ceid.upatras.gr');
+
+INSERT INTO Category VALUES
+(NULL,'Sports','Athlitika lol',NULL),
+(NULL,'Politics','All things politics',NULL),
+(NULL,'Esoteriki Politiki','All things politics',1),
+(NULL,'Economics','All about the new CEID building budget',NULL);
+
+INSERT INTO Article VALUES
+('path1','Title1','Summary1',NULL,NULL,null,'aristeid@ceid.upatras.gr',15,NULL,NULL,'CEID Times',1),
+('path2','Title2','Summary2',NULL,NULL,null,'christides@ceid.upatras.gr',24,NULL,NULL,'KATHIMERINH',1),
+('path3','Title3','Summary3',NULL,NULL,null,'nikolosd@ceid.upatras.gr',24,NULL,NULL,'TO BHMA',1);
+
+INSERT INTO Submits VALUES
+('2019-01-01','path1','vergos@ceid.upatras.gr'),
+('2019-01-01','path2','alexiou@ceid.upatras.gr'),
+('2019-01-01','path3','vasilis@ceid.upatras.gr');
+INSERT INTO Passwords VALUES
+('alexiou@ceid.upatras.gr','1234','Journalist'),      
+('nikolosd@ceid.upatras.gr','password7','Editor_in_chief'), 
+('st1059630@ceid.upatras.gr','password2','Administrative'),  
+('st1059631@ceid.upatras.gr','password3','Administrative'),  
+('st1064036@ceid.upatras.gr','password1','Administrative');  

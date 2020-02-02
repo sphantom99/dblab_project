@@ -1,0 +1,145 @@
+DROP DATABASE IF EXISTS Project;
+CREATE DATABASE IF NOT EXISTS Project;
+USE Project;
+
+
+CREATE TABLE Newspaper
+(
+  Name VARCHAR(255) NOT NULL,
+  Publication_Frequency ENUM('DAILY','WEEKLY','MONTHLY') ,
+  Owner VARCHAR(255) NOT NULL,
+  PRIMARY KEY (Name)
+);
+
+CREATE TABLE Worker
+(
+  Name VARCHAR(255) NOT NULL,
+  Last_Name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  Date_of_Recruitment DATE NOT NULL,
+  Salary FLOAT NOT NULL,
+  Newspaper_Name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email),
+  FOREIGN KEY (Newspaper_Name) REFERENCES Newspaper(Name)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Issue
+(
+  Issue_No INT NOT NULL,
+  Date_of_Publication DATE NOT NULL,
+  No_of_pages INT DEFAULT '30' ,
+  Printed_Copies INT DEFAULT '10000' ,
+  Returned_copies INT DEFAULT '0',
+  Newspaper_Name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (Issue_No, Newspaper_Name),
+  FOREIGN KEY (Newspaper_Name) REFERENCES Newspaper(Name)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Administrative
+(
+  Duties ENUM('Secretary','Logistics') NOT NULL,
+  Street VARCHAR(255) NOT NULL,
+  Street_No INT NOT NULL,
+  City VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email),
+  FOREIGN KEY (email) REFERENCES Worker(email)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Administrative_Phone
+(
+  Phone VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  PRIMARY KEY (Phone, email),
+  FOREIGN KEY (email) REFERENCES Administrative(email)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Journalist
+(
+  pre_occupation_at_assignment INT NOT NULL,
+  Short_bio VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email),
+  FOREIGN KEY (email) REFERENCES Worker(email)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Editor_in_chief
+(
+  Newspaper_Name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email),
+  FOREIGN KEY (Newspaper_Name) REFERENCES Newspaper(Name)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (email) REFERENCES Journalist(email)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Category
+(
+  code INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(255) NOT NULL,
+  Description VARCHAR(255) NOT NULL,
+  is_child_of INT,
+  PRIMARY KEY (code),
+  FOREIGN KEY (is_child_of) REFERENCES Category(code)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Article
+(
+  article_path VARCHAR(255) NOT NULL,
+  Title VARCHAR(255) NOT NULL,
+  Summary VARCHAR(255) NOT NULL,
+  article_order INT,
+  revision_comments VARCHAR(255),
+  checked_or_not ENUM('NOT CHECKED', 'APPROVED', 'TO BE REVISED','DENIED') ,
+  editor_in_chief VARCHAR(255),
+  No_of_pages INT NOT NULL,
+  Photos VARCHAR(255),
+  Issue_No INT DEFAULT NULL,
+  Newspaper_Name VARCHAR(255) NOT NULL,
+  Category INT NOT NULL,
+  PRIMARY KEY (article_path),
+  FOREIGN KEY (Category) REFERENCES Category(code)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (editor_in_chief) REFERENCES Editor_in_chief(email)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (Issue_No, Newspaper_Name) REFERENCES Issue(Issue_No, Newspaper_Name)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Submits
+(
+  submission_date DATE NOT NULL,
+  article_path VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  PRIMARY KEY (article_path,email),
+  FOREIGN KEY (article_path) REFERENCES Article(article_path)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (email) REFERENCES Journalist(email)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Article_key_word
+(
+  article_path VARCHAR(255) NOT NULL,
+  key_word VARCHAR(255) NOT NULL,
+  PRIMARY KEY (key_word, article_path),
+  FOREIGN KEY (article_path) REFERENCES Article(article_path)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Passwords
+(
+	username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	attribute ENUM('Administrative','Journalist','Editor_in_chief') NOT NULL,
+	PRIMARY KEY (username),
+	FOREIGN KEY (username) REFERENCES Worker(email)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
