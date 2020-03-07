@@ -54,6 +54,18 @@ BEGIN
 END& 
 DELIMITER ;
 
+/////////////////////////////////////////////////////////////////////
+
+drop procedure if exists getKeywords;
+delimiter &
+create procedure getKeywords(mypath varchar(255))
+begin 
+	select key_word 
+	from article_key_word
+	where article_path = mypath ; 
+end&
+delimiter ;
+
 DROP PROCEDURE IF EXISTS insert_journalist;
 DELIMITER &
 CREATE PROCEDURE insert_journalist(pre_occupation int, bio varchar(255), name varchar(255), last_name varchar(255), email varchar(255), salary int, newspaper_name varchar(255), password VARCHAR(255))
