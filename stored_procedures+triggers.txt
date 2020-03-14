@@ -1,28 +1,27 @@
-drop trigger if exists salary;
-delimiter &
-create trigger salary
-before insert 
-on Worker
-for each row 
-begin
-	if new.salary is null then	
-	set new.salary = 650;
-	end if;
-end& 
-delimiter ;
+DROP TRIGGER IF EXISTS salary;
+DELIMITER &
+CREATE TRIGGER salary
+BEFORE INSERT 
+ON Worker
+FOR EACH ROW 
+BEGIN
+	IF new.salary IS NULL THEN	
+	SET new.salary = 650 AND new.initial_salary = 650;
+	END IF;
+END& 
+DELIMITER ;
 
 
 
-
-create trigger issue_space 
-before update 
-on Article 
-for each row
-begin 
-	declare issue_pages int;
-	declare pages_filled int;
-	declare Nopages int;
-	declare not_found int;
+CREATE TRIGGER issue_space 
+BEFORE UPDATE 
+ON Article 
+FOR EACH ROW
+BEGIN 
+	DECLARE issue_pages INT;
+	DECLARE pages_filled INT;
+	DECLARE Nopages INT;
+	DECLARE not_found INT;
 	DECLARE bcursor CURSOR FOR
 	SELECT No_of_pages FROM Article where Issue_No = new.Issue_No and Newspaper_Name = new.Newspaper_Name;
 	
@@ -34,77 +33,73 @@ begin
 	
 	OPEN bcursor;	
 	
-	repeat
+	REPEAT
 			FETCH bcursor INTO Nopages;
-			if(not_found=0)
-			then
-				set pages_filled = pages_filled + Nopages;
-			end if;
-		until(not_found=1)
-	end repeat;
+			IF(not_found=0)
+			THEN
+				SET pages_filled = pages_filled + Nopages;
+			END IF;
+		UNTIL(not_found=1)
+	END REPEAT;
 		
 	
-	
-	
-	set issue_pages = ( select No_of_pages 
-						from Issue 
-						where Issue_No = new.Issue_No and Newspaper_Name = new.Newspaper_Name);
-	if issue_pages - pages_filled - new.No_of_pages < 0 
-	then 
+	SET issue_pages = ( SELECT No_of_pages 
+						FROM Issue 
+						WHERE Issue_No = new.Issue_No AND Newspaper_Name = new.Newspaper_Name);
+	IF issue_pages - pages_filled - new.No_of_pages < 0 
+	THEN 
 		SIGNAL SQLSTATE VALUE '45000'
 		SET MESSAGE_TEXT = 'Not enough pages left'; 
-	end if;
-end& 
-delimiter ;
+	END IF;
+END& 
+DELIMITER ;
 
-drop procedure if exists insert_journalist;
-delimiter &
-create procedure insert_journalist(pre_occupation int , bio varchar(255) , name varchar(255) , last_name varchar(255) , email varchar(255) , salary int , newspaper_name varchar(255))
-begin
-	insert into Worker values (Name,last_name,email,SYSDATE(),salary,newspaper_name);
-	insert into Journalist values (pre_occupation,bio,email);
-end&
-delimiter ;
+DROP PROCEDURE IF EXISTS insert_journalist;
+DELIMITER &
+CREATE PROCEDURE insert_journalist(pre_occupation int, bio varchar(255), name varchar(255), last_name varchar(255), email varchar(255), salary int, newspaper_name varchar(255), password VARCHAR(255))
+BEGIN
+	INSERT INTO Worker VALUES (Name, last_name, email, SYSDATE(), salary, newspaper_name, password, salary);
+	INSERT INTO Journalist VALUES (pre_occupation, bio, email);
+END&
+DELIMITER ;
 
 
-drop procedure if exists insert_administrative;
-delimiter &
-create procedure insert_administrative(duties varchar(255),street varchar(255), street_no int , city varchar(255) , name varchar(255) , last_name varchar(255) , email varchar(255) , salary int , newspaper_name varchar(255))
-begin
-	insert into Worker values (Name,last_name,email,SYSDATE(),salary,newspaper_name);
-	insert into administrative values (duties,street,street_no,city,email);
-end&
-delimiter ;
+DROP PROCEDURE IF EXISTS insert_administrative;
+DELIMITER &
+CREATE PROCEDURE insert_administrative(duties varchar(255), street varchar(255), street_no int, city varchar(255), name varchar(255), last_name varchar(255), email varchar(255), salary int, newspaper_name varchar(255), password VARCHAR(255))
+BEGIN
+	INSERT INTO Worker VALUES (Name, last_name, email, SYSDATE(), salary, newspaper_name, password, salary);
+	INSERT INTO administrative VALUES (duties, street, street_no, city, email);
+END&
+DELIMITER ;
 
-drop procedure if exists new_salary;
-delimiter &
-create procedure new_salary(mail varchar(255))
-    begin
-    declare datediff int;
-    declare preoccupation int;
-    declare months int;
-    declare work int;
-    declare salar int;
-    declare salary_raise int;
+DROP PROCEDURE IF EXISTS new_salary;
+DELIMITER &
+CREATE PROCEDURE new_salary(mail varchar(255))
+BEGIN
+    DECLARE datediff INT;
+    DECLARE preoccupation INT;
+    DECLARE months INT;
+    DECLARE work INT;
+    DECLARE salar INT;
+    DECLARE salary_raise INT;
     
-    set preoccupation = (select pre_occupation_at_assignment from Journalist where email = mail);
-    set salar = (select Salary from Worker where email = mail);
-    set salary_raise = 0;
-    SELECT DATEDIFF( SYSDATE() , Worker.Date_of_Recruitment) into datediff from Worker where email = mail;
+    SET preoccupation = (SELECT pre_occupation_at_assignment FROM Journalist WHERE email = mail);
+    SET salar = (SELECT initial_salary FROM Worker WHERE email = mail);
+    SET salary_raise = 0;
+    SELECT DATEDIFF( SYSDATE() , Worker.Date_of_Recruitment) into datediff FROM Worker WHERE email = mail;
     
-    set months = (datediff / 30);
-    select Date_of_Recruitment , SYSDATE() from Worker where email = mail;
-    set work = preoccupation + months;
-    
-    
-    set salary_raise = (salary_raise + salar * work * 0.005);
-    select salary_raise;
-    update Worker set Salary = salary_raise where email=mail;
+    SET months = (datediff / 30);
+    SELECT Date_of_Recruitment , SYSDATE() FROM Worker WHERE email = mail;
+    SET work = preoccupation + months;
     
     
-end &
-
-delimiter ; 
+    SET salary_raise = (salary_raise + salar * work * 0.005);
+    SELECT salary_raise;
+	UPDATE Worker SET Salary = salary_raise WHERE email=mail;
+     
+END &
+DELIMITER ; 
 
 
 

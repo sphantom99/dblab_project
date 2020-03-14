@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS project;
+
+CREATE DATABASE project;
+USE project;
+
 CREATE TABLE Newspaper
 (
   Name VARCHAR(255) NOT NULL,
@@ -14,6 +19,8 @@ CREATE TABLE Worker
   Date_of_Recruitment DATE NOT NULL,
   Salary FLOAT NOT NULL,
   Newspaper_Name VARCHAR(255) NOT NULL,
+  Password VARCHAR(255) NOT NULL,
+  initial_salary INT NOT NULL,
   PRIMARY KEY (email),
   FOREIGN KEY (Newspaper_Name) REFERENCES Newspaper(Name)
   ON DELETE CASCADE ON UPDATE CASCADE
@@ -131,15 +138,6 @@ CREATE TABLE Article_key_word
   ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Passwords
-(
-	username VARCHAR(255) NOT NULL,
-	password VARCHAR(255) NOT NULL,
-	attribute ENUM('Administrative','Journalist','Editor_in_chief','Publisher') NOT NULL,
-	PRIMARY KEY (username),
-	FOREIGN KEY (username) REFERENCES Worker(email)
-	ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 INSERT INTO Newspaper VALUES
 ('TO BHMA', 'WEEKLY', 'Maria Rigou'),
@@ -147,18 +145,18 @@ INSERT INTO Newspaper VALUES
 ('CEID Times', 'MONTHLY', 'Efstratios Gallopoulos');
 
 INSERT INTO Worker VALUES
-('Leonidas', 'Karagiannis', 'st1064036@ceid.upatras.gr', '2017-08-25', '1200.00', 'CEID Times'),
-('Aristeidis', 'Elias', 'aristeid@ceid.upatras.gr', '1998-01-01', '2500.00', 'CEID Times'),
-('Haridimos', 'Vergos', 'vergos@ceid.upatras.gr', '1985-06-10', '3000.00', 'CEID Times'),
-('Ioannis', 'Hatziligeroudis', 'ihatz@ceid.upatras.gr', '1982-05-05', '2310.00', 'CEID Times'),
-('George', 'Al Baboul','st1059631@ceid.upatras.gr','2016-05-20','1500.00','KATHIMERINH'),
-('Spyros', 'Sioutas','sioutas@ceid.upatras.gr','2005-04-13','2100.00','KATHIMERINH'),
-('George', 'Alexiou', 'alexiou@ceid.upatras.gr', '1980-01-01', '4000.00', 'KATHIMERINH'),
-('Christos', 'Christidis', 'christides@ceid.upatras.gr', '2001-10-03', '900.00', 'KATHIMERINH'),
-('Paulinho', 'Akino Elloul', 'st1059630@ceid.upatras.gr', '2017-08-22', '1200.00', 'TO BHMA'),
-('Dimitris', 'Nikolos', 'nikolosd@ceid.upatras.gr', '1985-02-25', '3000.00', 'TO BHMA'),
-('Vasileios', 'Megalooikonomou', 'vasilis@ceid.upatras.gr', '1999-08-17', '1300.00', 'TO BHMA'),
-('Emmanouil', 'Psarakis', 'psarakis@ceid.upatras.gr', '1995-04-03', '5000.00', 'TO BHMA');
+('Leonidas', 'Karagiannis', 'st1064036@ceid.upatras.gr', '2017-08-25', '1200.00', 'CEID Times','password1','1200.00'),
+('Aristeidis', 'Elias', 'aristeid@ceid.upatras.gr', '1998-01-01', '2500.00', 'CEID Times','password2','2500.00'),
+('Haridimos', 'Vergos', 'vergos@ceid.upatras.gr', '1985-06-10', '3000.00', 'CEID Times','password3','3000.00'),
+('Ioannis', 'Hatziligeroudis', 'ihatz@ceid.upatras.gr', '1982-05-05', '2310.00', 'CEID Times','password4','2310.00'),
+('George', 'Al Baboul','st1059631@ceid.upatras.gr','2016-05-20','1500.00','KATHIMERINH','password5','1500.00'),
+('Spyros', 'Sioutas','sioutas@ceid.upatras.gr','2005-04-13','2100.00','KATHIMERINH','password6','2100.00'),
+('George', 'Alexiou', 'alexiou@ceid.upatras.gr', '1980-01-01', '4000.00', 'KATHIMERINH','password7','4000.00'),
+('Christos', 'Christidis', 'christides@ceid.upatras.gr', '2001-10-03', '900.00', 'KATHIMERINH','password8','900.00'),
+('Paulinho', 'Akino Elloul', 'st1059630@ceid.upatras.gr', '2017-08-22', '1200.00', 'TO BHMA','password9','1200.00'),
+('Dimitris', 'Nikolos', 'nikolosd@ceid.upatras.gr', '1985-02-25', '3000.00', 'TO BHMA','password10','3000.00'),
+('Vasileios', 'Megalooikonomou', 'vasilis@ceid.upatras.gr', '1999-08-17', '1300.00', 'TO BHMA','password11','1300.00'),
+('Emmanouil', 'Psarakis', 'psarakis@ceid.upatras.gr', '1995-04-03', '5000.00', 'TO BHMA','password12','5000.00');
 
 INSERT INTO Issue VALUES
 (1,'2019-01-01',NULL,NULL,NULL,'KATHIMERINH'),
@@ -203,9 +201,3 @@ INSERT INTO Submits VALUES
 ('2019-01-01','path1','vergos@ceid.upatras.gr'),
 ('2019-01-01','path2','alexiou@ceid.upatras.gr'),
 ('2019-01-01','path3','vasilis@ceid.upatras.gr');
-INSERT INTO Passwords VALUES
-('alexiou@ceid.upatras.gr','1234','Journalist'),      
-('nikolosd@ceid.upatras.gr','password7','Editor_in_chief'), 
-('st1059630@ceid.upatras.gr','password2','Administrative'),  
-('st1059631@ceid.upatras.gr','password3','Administrative'),  
-('st1064036@ceid.upatras.gr','password1','Administrative');  
