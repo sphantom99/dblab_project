@@ -1,12 +1,12 @@
 To-Do List
 2. ληψη υποψην μονο των εργαζομενων απο την ημερομηνια που διαλεγουμε για συνολικα εξοδα
 
-3. ο πινακας worker να εχει τα attributes και τα passwords
-3a. να ανανεωθει το validate procedure (αλλαγη του attribute)
+3. ο πινακας worker να εχει τα attributes και τα passwords -------------DONE
+3a. να ανανεωθει το validate procedure (αλλαγη του attribute) -------------DONE
 
 4. οταν coauthor ενος αρθρου ειναι editor in chief, να γινεται αυτοματα accepted
-5. να μπορει ο καθενας να αλλαζει το password του
-6. οταν προσλαμβανεται καποιος να του δινεται ενα default password
+5. να μπορει ο καθενας να αλλαζει το password του --------DONE
+6. οταν προσλαμβανεται καποιος να του δινεται ενα default password --------DONE 
 
 GUI 
 
