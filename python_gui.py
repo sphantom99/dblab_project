@@ -1,5 +1,5 @@
 import tkinter as tn 
-from tkinter import messagebox as msg
+from tkinter import messagebox as msg """ pop up"""
 import mysql.connector as con
 import re 
 
@@ -26,20 +26,20 @@ class login(object):
 	If found we spawn the corresponding window...
 	"""
 	
-	def __init__(self, master):
+	def __init__(self, master): """Windows base"""
 		self.user = ""
 		self.master = master
 		#self.master.title("Welcome")
 		self.var = tn.StringVar()
-		self.var.set("Welcome\nPlease login")
+		self.var.set("Welcome\nPlease login") #string
 		self.welcome_label = tn.Label(master,textvar=self.var)
 		self.welcome_label.grid(columnspan=2,sticky=tn.N,row = 0)
 
 		self.image = tn.PhotoImage(file="./assets/login.png")
 		global imageicon
-		imageicon = tn.PhotoImage(file="./assets/newspaper4.png")
+		imageicon = tn.PhotoImage(file="./assets/newspaper4.png") #for alt-tab
 		self.master.tk.call('wm','iconphoto',self.master._w,imageicon)
-		self.imagelabel = tn.Label(master)
+		self.imagelabel = tn.Label(master)#new label 
 		self.imagelabel.grid(columnspan = 2, row = 1 ,column = 0)
 		self.imagelabel['image']= self.image
 		
@@ -58,7 +58,7 @@ class login(object):
 		self.login_button = tn.Button(master,text="Login",command = self.validation)
 		self.login_button.grid(row=4,column=0)	
 
-		self.login_button = tn.Button(master,text="Quit",command = master.quit)
+		self.login_button = tn.Button(master,text="Quit",command = master.quit)#quits everything
 		self.login_button.grid(row=4,column=1)	
 		
 	def validation(self): #--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class login(object):
 			newj = journalist(new)
 		"""
 		global pattern
-		pattern = ["select","SELECT","DROP","drop","'",";"]
+		pattern = ["select","SELECT","DROP","drop","'",";"]#sql injection proof
 		
 		credlist = []
 		
@@ -82,7 +82,7 @@ class login(object):
 				re.sub(x," ",self.user)
 				pass
 			pass
-		curs.callproc("validatePassword",[self.user])
+		curs.callproc("validatePassword",[self.user])#stored procedure
 		for x in curs.stored_results():
 			credlist = x.fetchall()
 		if self.user == "Efstratios Gallopoulos" and password == "4321":
@@ -129,19 +129,19 @@ class journalist(login,object):
 		self.master = master
 		master.title("Welcome")
 		self.image = tn.PhotoImage(file="./assets/journalist2.png")
-		self.image = self.image.subsample(5,5)
-		self.master.tk.call('wm','iconphoto',self.master._w,imageicon)
+		self.image = self.image.subsample(5,5)#image size
+		self.master.tk.call('wm','iconphoto',self.master._w,imageicon)#alt-tab
 		self.var = tn.StringVar()
 		self.var.set("Welcome\nWhat would you like to do?")
 		self.welcome_label = tn.Label(master,textvar=self.var)
 		self.welcome_label.pack()  #grid(columnspan=2,sticky=tn.N,row = 0)
 		self.imagelabel = tn.Label(master)
 		self.imagelabel.pack()
-		self.imagelabel['image'] = self.image
+		self.imagelabel['image'] = self.image 
 		options=[("Submit an article",0),("View an article",1),("Revise an article",2)]
 
 		for text,val in options:
-			tn.Radiobutton(master,text=text , value = val , variable = self.var1).pack()
+			tn.Radiobutton(master,text=text , value = val , variable = self.var1).pack()#check box
 
 		self.but = tn.Button(master,text="Select",command=self.checkans)
 		self.but.pack()
@@ -175,7 +175,7 @@ class submission(object):
 		self.choices_Categories = []
 		curs.callproc("showAllCategories")
 		for x in curs.stored_results():
-			self.choice = x.fetchall()
+			self.choice = x.fetchall()     #dropdown
 		for y in range(len(self.choice)):
 			for x in self.choice[y]:
 				self.choices_Categories.append(x.encode("utf-8"))
@@ -1569,7 +1569,7 @@ class administrative_hire(object):
 a = con.connect(user ="root",password="",host="localhost",database ="whatever")
 curs = a.cursor()
 
-root = tn.Tk(className = "Login")
+root = tn.Tk(className = "Login")#base window 
 
 tester = login(root)
 root.mainloop()
