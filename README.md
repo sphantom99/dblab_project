@@ -8,4 +8,4 @@ Authors
 ----
 Leonidas Karagiannis (leonidask914@gmail.com)
 George Al Baboul (georgeal@gmail.com)
-Paulinho Akino Elloul ()
+Pavlos Aquino-Ellul (paulinhoellul@gmail.com)
