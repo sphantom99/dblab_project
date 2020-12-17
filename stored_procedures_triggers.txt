@@ -91,6 +91,7 @@ END&
 DELIMITER ;
 
 # ---------------PROCEDURES---------------------------------------------------------
+
 DROP PROCEDURE IF EXISTS changePassword;
 DELIMITER &
 CREATE PROCEDURE changePassword(emaill VARCHAR(255), new_password VARCHAR(255))
@@ -305,6 +306,7 @@ END$
 DELIMITER ;
 
 
+
 DROP PROCEDURE IF EXISTS updateCheckStatus;
 DELIMITER $
 CREATE PROCEDURE updateCheckStatus(my_article_path VARCHAR(255), checkStatus VARCHAR(255))
@@ -314,6 +316,7 @@ BEGIN
 		WHERE article_path = my_article_path;
 END $
 DELIMITER ;
+
 
 
 DROP PROCEDURE IF EXISTS updateArticle;
@@ -346,6 +349,7 @@ END$
 DELIMITER ;
 
 
+
 DROP PROCEDURE IF EXISTS showAllIssues;
 DELIMITER $
 CREATE PROCEDURE showAllIssues(email VARCHAR(255))
@@ -359,6 +363,7 @@ END $
 DELIMITER ;
 
 
+
 DROP PROCEDURE IF EXISTS showArticle;
 DELIMITER $
 CREATE PROCEDURE showArticle(articlepath VARCHAR(255))
@@ -367,6 +372,7 @@ BEGIN
 	WHERE article_path = articlepath;
 END $
 DELIMITER ;
+
 
 
 DROP PROCEDURE IF EXISTS showAllJournalistArticles;
@@ -388,6 +394,7 @@ BEGIN
 	SELECT Name FROM Newspaper WHERE Owner = username;
 END $
 DELIMITER ;
+
 
 
 DROP PROCEDURE IF EXISTS showAllNewspaperJournalists;
@@ -444,6 +451,7 @@ END $
 DELIMITER ;
 
 
+
 DROP PROCEDURE IF EXISTS showAllCategories;
 DELIMITER $
 CREATE PROCEDURE showAllCategories()
@@ -451,6 +459,7 @@ BEGIN
 	SELECT Name FROM Category;
 END $
 DELIMITER ;
+
 
 
 DROP PROCEDURE IF EXISTS insertNewCategory;
@@ -465,6 +474,8 @@ BEGIN
 	END IF;	
 END $
 DELIMITER ;
+
+
 
 DROP PROCEDURE IF EXISTS insertReturnedCopies;
 DELIMITER $ 
@@ -486,7 +497,50 @@ BEGIN
 END $
 DELIMITER ;
 
+
 #///////////////////////////////////////////////////////////////////////////////////////////////
+DROP PROCEDURE IF EXISTS showTotalExpenses;
+DELIMITER $
+CREATE PROCEDURE showTotalExpenses(past_date DATE , recent_date DATE)
+BEGIN
+	DECLARE months INT;
+	DECLARE not_found INT DEFAULT 0;
+	DECLARE pages_filled INT DEFAULT 0;
+	DECLARE Total_expenses INT DEFAULT 0;
+	DECLARE recruitment_date DATE;
+	DECLARE bcursor CURSOR FOR
+	SELECT Date_of_Recruitment FROM Worker WHERE Date_of_Recruitment > past_date;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND
+	SET not_found=1;
+	
+	SET not_found=0;
+	SET pages_filled=0;
+	
+	OPEN bcursor;	
+	
+	REPEAT
+			FETCH bcursor INTO recruitment_date;
+			IF(not_found=0)
+			THEN
+				SET Total_expenses = Total_expenses + timestampdiff(month, recruitment_date, recent_date) * ;
+			END IF;
+		UNTIL(not_found=1)
+	END REPEAT;
+
+	SET months = timestampdiff(month, past_date, recent_date);
+
+	SET Total_expenses = months * ( 
+		SELECT SUM(salary) FROM Worker
+		WHERE Date_of_Recruitment < first_month
+		);
+
+	SET Total_expenses = Total_expenses + 
+	SELECT Total_expenses;
+END $
+DELIMITER ; 	
+	 
+
 DROP PROCEDURE IF EXISTS updateNewspaper;
 DELIMITER $
 CREATE PROCEDURE updateNewspaper(NewsName VARCHAR(255),PublicationFrequency VARCHAR(20) , NewOwner VARCHAR(255))
